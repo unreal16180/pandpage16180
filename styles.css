@@ -35,13 +35,13 @@ body{
 }
 
 .content{
-  width: 100%;
-  max-width: var(--max-width);
   text-align: justify;
   text-justify: inter-word;
-  hyphens: auto;
+
+  /* SOLUCIÓN */
+  hyphens: none;
   word-break: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 /* “Tipo documento” */
