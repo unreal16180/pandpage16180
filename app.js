@@ -270,7 +270,70 @@ function applyPrefs(){
   document.documentElement.style.setProperty("--font-weight", fontWeight.value);
   fontSizeVal.textContent = String(fontSize.value);
 }
+function normalizeMdForReading(md) {
+  md = md.replace(/\r\n/g, "\n");
 
+  const lines = md.split("\n");
+  const out = [];
+
+  let inCode = false;
+  let para = "";
+
+  const flushPara = () => {
+    const t = para.trim();
+    if (t) out.push(t);
+    para = "";
+  };
+
+  const isHeading = (l) => /^#{1,6}\s+/.test(l);
+  const isListItem = (l) => /^\s*[-*+]\s+/.test(l);
+  const isFence = (l) => l.trim().startsWith("```");
+
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const line = raw.trimEnd();
+
+    if (isFence(line)) {
+      flushPara();
+      out.push(line);
+      inCode = !inCode;
+      continue;
+    }
+
+    if (inCode) {
+      out.push(raw);
+      continue;
+    }
+
+    if (line.trim() === "") {
+      flushPara();
+      out.push("");
+      continue;
+    }
+
+    if (isHeading(line) || isListItem(line)) {
+      flushPara();
+      out.push(line);
+      continue;
+    }
+
+    if (!para) {
+      para = line.trim();
+    } else {
+      const prev = para;
+      const curr = line.trim();
+
+      if (/-$/.test(prev) && /^[a-zA-Z]/.test(curr)) {
+        para = prev.replace(/-$/, "") + curr;
+      } else {
+        para = prev + " " + curr;
+      }
+    }
+  }
+
+  flushPara();
+  return out.join("\n").replace(/[ \t]{2,}/g, " ");
+}
 // ===============
 // Cargar Markdown
 // ===============
@@ -279,7 +342,8 @@ async function loadMarkdown(){
     const res = await fetch(MD_PATH, { cache: "no-store" });
     if(!res.ok) throw new Error(`No se pudo cargar ${MD_PATH}: ${res.status}`);
     const md = await res.text();
-    const html = mdToHtml(md);
+    const cleaned = normalizeMdForReading(md);
+    const html = mdToHtml(cleaned);
 
     elContent.innerHTML = html;
   }catch(err){
