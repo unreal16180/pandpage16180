@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lector MD</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- Contenedor principal (sin header, pantalla completa) -->
+  <main id="reader" class="reader" aria-label="Lector de documento">
+    <article id="content" class="content" aria-live="polite">
+      <div class="loading" id="loading">Cargando documento…</div>
+    </article>
+  </main>
+
+  <!-- Botonera flotante inferior -->
+  <nav class="fab-bar" aria-label="Controles">
+    <button id="btnPrev" class="fab" title="Página anterior" aria-label="Página anterior">◀</button>
+
+    <button id="btnTools" class="fab fab-wide" title="Herramientas" aria-label="Abrir herramientas">
+      ☰
+    </button>
+
+    <button id="btnNext" class="fab" title="Página siguiente" aria-label="Página siguiente">▶</button>
+  </nav>
+
+  <!-- Panel flotante (buscador, ir a página, tamaño/fuente) -->
+  <section id="toolsPanel" class="panel" aria-hidden="true">
+    <div class="panel-inner">
+      <div class="panel-row">
+        <label class="lbl" for="searchInput">Buscar</label>
+        <input id="searchInput" class="inp" type="search" placeholder="Escribe una palabra…" autocomplete="off" />
+      </div>
+
+      <div class="panel-row panel-row-2">
+        <button id="btnFindPrev" class="mini" title="Anterior coincidencia" aria-label="Anterior coincidencia">↑</button>
+        <button id="btnFindNext" class="mini" title="Siguiente coincidencia" aria-label="Siguiente coincidencia">↓</button>
+        <button id="btnClearSearch" class="mini" title="Limpiar búsqueda" aria-label="Limpiar búsqueda">✕</button>
+      </div>
+
+      <hr class="sep"/>
+
+      <div class="panel-row">
+        <label class="lbl" for="pageInput">Ir a “página”</label>
+        <div class="page-go">
+          <input id="pageInput" class="inp" type="number" min="1" step="1" placeholder="Ej: 3" />
+          <button id="btnGoPage" class="mini go" aria-label="Ir">Ir</button>
+        </div>
+        <div class="hint" id="pageHint">“Página” = pantalla completa (viewport). 1 = inicio.</div>
+      </div>
+
+      <hr class="sep"/>
+
+      <div class="panel-row">
+        <label class="lbl" for="fontSize">Tamaño</label>
+        <input id="fontSize" class="range" type="range" min="14" max="26" value="18" />
+        <span id="fontSizeVal" class="val">18</span>
+      </div>
+
+      <div class="panel-row">
+        <label class="lbl" for="fontWeight">Grosor</label>
+        <select id="fontWeight" class="sel" aria-label="Grosor de fuente">
+          <option value="100">100 (muy fino)</option>
+          <option value="200">200</option>
+          <option value="300">300</option>
+          <option value="400" selected>400 (normal)</option>
+          <option value="500">500</option>
+          <option value="600">600</option>
+          <option value="700">700 (negrita)</option>
+        </select>
+      </div>
+
+      <div class="panel-row panel-row-2">
+        <button id="btnReset" class="mini" aria-label="Restablecer ajustes">Reset</button>
+        <div class="spacer"></div>
+        <button id="btnClosePanel" class="mini" aria-label="Cerrar">Cerrar</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="./app.js"></script>
+</body>
+</html>
